@@ -50,6 +50,12 @@ input,textarea,select{font-family:inherit}
 .upload-filename{font-size:11px;color:#059669;font-weight:600;margin-top:6px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .remove-file-btn{position:absolute;top:8px;right:8px;background:#fee2e2;border:none;color:#ef4444;width:22px;height:22px;border-radius:50%;font-size:12px;font-weight:700}
 .tip-box{background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:12px 14px;font-size:12px;color:#78350f;line-height:1.6;margin-bottom:20px}
+.title-input-wrap{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.title-input-icon{font-size:22px;flex-shrink:0}
+.title-input-inner{flex:1}
+.title-input-label{font-size:11px;font-weight:700;color:#6366f1;letter-spacing:.5px;display:block;margin-bottom:5px;text-transform:uppercase}
+.title-input-field{width:100%;border:none;outline:none;font-size:16px;font-weight:700;color:#0f172a;background:transparent;padding:0}
+.title-input-field::placeholder{color:#cbd5e1;font-weight:500}
 .btn-primary{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;width:100%}
 .btn-primary:disabled{opacity:.45;cursor:not-allowed}
 .btn-secondary{padding:10px 20px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;font-size:13px;font-weight:600;color:#374151}
@@ -76,12 +82,13 @@ input,textarea,select{font-family:inherit}
 .published-banner h2{font-size:20px;font-weight:800;margin-bottom:4px}
 .published-banner p{font-size:13px;opacity:.85}
 .published-actions{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
-.name-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:32px 24px;max-width:400px;margin:40px auto;text-align:center}
-.name-card .icon{font-size:40px;margin-bottom:12px}
-.name-card h2{font-size:19px;font-weight:800;margin-bottom:6px}
-.name-card p{font-size:13px;color:#64748b;margin-bottom:20px}
-.name-input{width:100%;border:1.5px solid #e2e8f0;border-radius:10px;padding:12px 14px;font-size:15px;outline:none;transition:border-color .15s;margin-bottom:14px}
-.name-input:focus{border-color:#6366f1}
+.s-hub-card{background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:32px 24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;cursor:pointer;transition:border-color .2s,box-shadow .2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.s-hub-card:hover{border-color:#6366f1;box-shadow:0 0 0 4px #ede9fe}
+.s-hub-icon{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.s-hub-info{flex:1}
+.s-hub-title{font-size:17px;font-weight:800;color:#0f172a;margin-bottom:4px}
+.s-hub-sub{font-size:13px;color:#64748b}
+.s-hub-arrow{font-size:20px;color:#6366f1;font-weight:700}
 .exam-list{display:flex;flex-direction:column;gap:12px}
 .exam-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
 .exam-card:hover{border-color:#6366f1;box-shadow:0 0 0 3px #ede9fe}
@@ -207,6 +214,15 @@ input,textarea,select{font-family:inherit}
       <button class="model-pill" onclick="selectModel(this,'gemini-1.5-flash')">Gemini 1.5 Flash</button>
     </div>
     <div style="font-size:11px;color:#94a3b8;margin-bottom:20px">Key secured on server</div>
+    <!-- Exam title – clean, at top -->
+    <div class="title-input-wrap">
+      <div class="title-input-icon">&#128221;</div>
+      <div class="title-input-inner">
+        <label class="title-input-label">Exam Title</label>
+        <input class="title-input-field" type="text" id="exam-title-input" placeholder="e.g. Science Chapter 4 Test" autocomplete="off"/>
+      </div>
+    </div>
+
     <div class="tip-box"><strong>Tip:</strong> Adding a model answer boosts rubric quality &mdash; Gemini extracts exact expected content, key phrases, and scoring criteria directly from your official answers.</div>
     <div class="upload-grid">
       <div>
@@ -229,19 +245,6 @@ input,textarea,select{font-family:inherit}
           <div class="upload-hint">Official answer / marking scheme</div>
           <div class="upload-filename hidden" id="ma-filename"></div>
           <button class="remove-file-btn hidden" id="ma-remove" onclick="removeFile(event,'ma')">&#10005;</button>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Exam Details</div>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
-        <div>
-          <label style="font-size:11px;font-weight:700;color:#6366f1;letter-spacing:.4px;display:block;margin-bottom:4px">EXAM TITLE</label>
-          <input type="text" id="exam-title-input" placeholder="e.g. Science Chapter 4 Test" style="width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:9px 12px;font-size:14px;outline:none"/>
-        </div>
-        <div>
-          <label style="font-size:11px;font-weight:700;color:#6366f1;letter-spacing:.4px;display:block;margin-bottom:4px">SUBJECT / CLASS</label>
-          <input type="text" id="exam-subject-input" placeholder="e.g. Science - Class 8" style="width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:9px 12px;font-size:14px;outline:none"/>
         </div>
       </div>
     </div>
@@ -294,14 +297,17 @@ input,textarea,select{font-family:inherit}
 <!-- STUDENT VIEW -->
 <div id="student-view" class="main hidden">
 
-  <!-- S0 Name -->
-  <div id="s-name-screen">
-    <div class="name-card">
-      <div class="icon">&#127891;</div>
-      <h2>Student Login</h2>
-      <p>Enter your name to access descriptive exams</p>
-      <input class="name-input" id="s-name-input" type="text" placeholder="Your full name" maxlength="60"/>
-      <button class="btn-primary" onclick="confirmStudentName()">Continue &rarr;</button>
+  <!-- S0 Hub -->
+  <div id="s-hub-screen">
+    <div class="section-title">Exam Hub</div>
+    <div class="section-sub">Select exam type to continue</div>
+    <div class="s-hub-card" onclick="goToExamList()">
+      <div class="s-hub-icon">&#128221;</div>
+      <div class="s-hub-info">
+        <div class="s-hub-title">Descriptive Exam</div>
+        <div class="s-hub-sub">AI-evaluated &middot; Written &amp; handwritten answers &middot; Gemini AI</div>
+      </div>
+      <span class="s-hub-arrow">&rarr;</span>
     </div>
   </div>
 
@@ -417,8 +423,8 @@ function switchTab(t){
   document.getElementById('student-view').classList.toggle('hidden',t!=='student');
   document.getElementById('tab-teacher').classList.toggle('active',t==='teacher');
   document.getElementById('tab-student').classList.toggle('active',t==='student');
-  if(t==='student'&&!studentName){showStudentScreen('s-name-screen');}
-  else if(t==='student'){showStudentScreen('s-list-screen');renderExamList();}
+  if(t==='student'){showStudentScreen('s-hub-screen');}
+  
 }
 
 function triggerFile(id){document.getElementById(id).click();}
@@ -448,7 +454,7 @@ function selectModel(btn,model){
 async function analyseWithGemini(){
   if(!qpFile){alert('Please upload a Question Paper first.');return;}
   const title=document.getElementById('exam-title-input').value.trim()||'Untitled Exam';
-  const subject=document.getElementById('exam-subject-input').value.trim()||'';
+  const subject='';
   const apiKey=GEMINI_API_KEY;
   if(!apiKey||apiKey===''){alert('No Gemini API key found.\n\nFor Vercel deployment: add GEMINI_API_KEY to your environment variables.\nFor local testing: replace __GEMINI_KEY__ in the HTML with your key.');return;}
   document.getElementById('analyse-btn').disabled=true;
@@ -540,7 +546,7 @@ function publishExam(){
   const exam={
     id:'exam-'+Date.now(),
     title:meta.title||'Untitled Exam',
-    subject:meta.subject||'',
+    subject:'',
     publishedAt:new Date().toISOString(),
     questions:editedRubric.filter(q=>typeof q.text==='string').map((q,i)=>({
       id:q.id||'q'+(i+1),
@@ -553,7 +559,7 @@ function publishExam(){
   const existing=loadExams();existing.unshift(exam);saveExams(existing);
   showTeacherScreen('t-published-screen');
   const s=document.getElementById('published-exam-summary');
-  s.innerHTML=`<div class="card" style="margin-top:0"><div class="card-title">${exam.title}</div><div class="card-sub">${exam.subject} &middot; ${exam.questions.length} questions &middot; ${exam.questions.reduce((a,q)=>a+q.marks,0)} total marks</div>${exam.questions.map((q,i)=>`<div style="font-size:13px;color:#374151;padding:6px 0;border-top:1px solid #f1f5f9"><strong>Q${q.questionNumber}.</strong> ${q.text} <em style="color:#6366f1">(${q.marks} marks)</em></div>`).join('')}</div>`;
+  s.innerHTML=`<div class="card" style="margin-top:0"><div class="card-title">${exam.title}</div><div class="card-sub">${exam.questions.length} questions &middot; ${exam.questions.reduce((a,q)=>a+q.marks,0)} total marks</div>${exam.questions.map((q,i)=>`<div style="font-size:13px;color:#374151;padding:6px 0;border-top:1px solid #f1f5f9"><strong>Q${q.questionNumber}.</strong> ${q.text} <em style="color:#6366f1">(${q.marks} marks)</em></div>`).join('')}</div>`;
 }
 function resetTeacher(){
   qpFile=null;maFile=null;originalRubric=[];editedRubric=[];editCount=0;
@@ -564,33 +570,28 @@ function resetTeacher(){
     document.getElementById(t+'-file').value='';
   });
   document.getElementById('exam-title-input').value='';
-  document.getElementById('exam-subject-input').value='';
   document.getElementById('analyse-btn').disabled=false;
   document.getElementById('analysing-box').classList.add('hidden');
   showTeacherScreen('t-upload-screen');
+if(document.getElementById('student-view').classList.contains('hidden')===false){showStudentScreen('s-hub-screen');}
 }
 function showTeacherScreen(id){
   ['t-upload-screen','t-rubric-screen','t-published-screen'].forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));
 }
 
 // STUDENT
-document.getElementById('s-name-input').addEventListener('keydown',e=>{if(e.key==='Enter')confirmStudentName();});
-function confirmStudentName(){
-  const v=document.getElementById('s-name-input').value.trim();
-  if(!v){alert('Please enter your name.');return;}
-  studentName=v;showStudentScreen('s-list-screen');renderExamList();
-}
+function goToExamList(){showStudentScreen('s-list-screen');renderExamList();}
 function renderExamList(){
   const exams=loadExams();const c=document.getElementById('s-exam-list');c.innerHTML='';
   if(!exams.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">&#128219;</div><p>No exams published yet.<br>Ask your teacher to publish an exam in <strong>Teacher View</strong>.</p></div>';return;}
   exams.forEach(exam=>{
     const tm=exam.questions.reduce((s,q)=>s+q.marks,0);
     const el=document.createElement('div');el.className='exam-card';
-    el.innerHTML=`<div class="exam-card-icon">&#128221;</div><div class="exam-card-info"><div class="exam-card-title">${exam.title}</div><div class="exam-card-meta">${exam.subject} &middot; ${exam.questions.length} questions &middot; ${tm} marks</div></div><span class="exam-card-arrow">&rarr;</span>`;
+    el.innerHTML=`<div class="exam-card-icon">&#128221;</div><div class="exam-card-info"><div class="exam-card-title">${exam.title}</div><div class="exam-card-meta">${exam.questions.length} questions &middot; ${tm} marks</div></div><span class="exam-card-arrow">&rarr;</span>`;
     el.onclick=()=>startExam(exam);c.appendChild(el);
   });
 }
-function goBackToList(){stopCamera();showStudentScreen('s-list-screen');renderExamList();}
+function goBackToList(){stopCamera();showStudentScreen('s-hub-screen');}
 
 function startExam(exam){
   activeExam=exam;currentQ=0;answers={};
@@ -736,7 +737,7 @@ function renderResults(results){
   document.getElementById('r-scored').textContent=scored;
   document.getElementById('r-total').textContent='/'+tm;
   document.getElementById('r-pct').textContent=pct+'%';
-  document.getElementById('r-student').textContent=studentName+' \u00b7 '+activeExam.title;
+  document.getElementById('r-student').textContent=activeExam.title;
   const c=document.getElementById('r-cards');c.innerHTML='';
   activeExam.questions.forEach((q,i)=>{
     const r=results[i];if(!r)return;
@@ -748,7 +749,7 @@ function renderResults(results){
   showStudentScreen('s-results-screen');
 }
 function showStudentScreen(id){
-  ['s-name-screen','s-list-screen','s-exam-screen','s-eval-screen','s-results-screen'].forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));
+  ['s-hub-screen','s-list-screen','s-exam-screen','s-eval-screen','s-results-screen'].forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));
 }
 
 async function callGemini(parts){
@@ -765,6 +766,7 @@ async function callGemini(parts){
 }
 
 showTeacherScreen('t-upload-screen');
+if(document.getElementById('student-view').classList.contains('hidden')===false){showStudentScreen('s-hub-screen');}
 </script>
 </body>
 </html>
