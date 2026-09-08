@@ -209,8 +209,8 @@ input,textarea,select{font-family:inherit}
     </div>
     <div class="model-row">
       <span class="model-label">&#9889; AI Model</span>
-      <button class="model-pill selected" onclick="selectModel(this,'gemini-2.5-flash-preview-05-20')">Gemini 2.5 Flash &middot; Recommended</button>
-      <button class="model-pill" onclick="selectModel(this,'gemini-2.0-flash')">Gemini 2.0 Flash</button>
+      <button class="model-pill selected" onclick="selectModel(this,'gemini-2.0-flash')">Gemini 2.0 Flash &middot; Recommended</button>
+      <button class="model-pill" onclick="selectModel(this,'gemini-1.5-flash')">Gemini 1.5 Flash</button>
       <button class="model-pill" onclick="selectModel(this,'gemini-1.5-flash')">Gemini 1.5 Flash</button>
     </div>
     <div style="font-size:11px;color:#94a3b8;margin-bottom:20px">Key secured on server</div>
@@ -409,7 +409,7 @@ input,textarea,select{font-family:inherit}
 
 <script>
 const GEMINI_API_KEY = (typeof __GEMINI_KEY__ !== 'undefined' ? __GEMINI_KEY__ : '') || '';
-let selectedModel = 'gemini-2.5-flash-preview-05-20';
+let selectedModel = 'gemini-2.0-flash';
 let qpFile=null,maFile=null;
 let originalRubric=[],editedRubric=[],editCount=0;
 let studentName='',activeExam=null,currentQ=0,answers={};
