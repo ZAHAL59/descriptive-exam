@@ -289,7 +289,7 @@ input,textarea,select{font-family:inherit}
       </div>
     </div>
     <div id="rubric-list"></div>
-    <button class="btn-success mt16" onclick="publishExam()">&#10003; Publish Exam for Students</button>
+    <button class="btn-success mt16" onclick="publishExam()">✓ Publish Exam for Students</button>
   </div>
 
   <!-- T3 Published -->
@@ -300,7 +300,7 @@ input,textarea,select{font-family:inherit}
       <p>Students can now select and attend this exam.</p>
       <div class="published-actions">
         <button class="btn-secondary" onclick="resetTeacher()">Back to Exam Hub</button>
-        <button class="btn-secondary" onclick="switchTab('student')">Switch to Student View &rarr;</button>
+        <button class="btn-secondary" onclick="switchTab('student')">Switch to Student View →</button>
       </div>
     </div>
     <div id="published-exam-summary"></div>
@@ -321,7 +321,7 @@ input,textarea,select{font-family:inherit}
         <div class="s-hub-title">Descriptive Exam</div>
         <div class="s-hub-sub">AI-evaluated &middot; Written &amp; handwritten answers &middot; Gemini AI</div>
       </div>
-      <span class="s-hub-arrow">&rarr;</span>
+      <span class="s-hub-arrow">→</span>
     </div>
   </div>
 
@@ -335,7 +335,7 @@ input,textarea,select{font-family:inherit}
   <!-- S2 Q-by-Q -->
   <div id="s-exam-screen" class="hidden">
     <div class="q-topbar">
-      <button class="back-btn" onclick="goBackToList()">&#8592; Exams</button>
+      <button class="back-btn" onclick="goBackToList()">← Exams</button>
       <div style="flex:1">
         <div style="font-weight:700;font-size:15px;color:#0f172a" id="s-exam-name"></div>
         <div style="font-size:12px;color:#64748b" id="s-exam-subject"></div>
@@ -371,8 +371,8 @@ input,textarea,select{font-family:inherit}
       </div>
     </div>
     <div class="nav-row">
-      <button class="btn-nav" id="s-prev-btn" onclick="sGoPrev()" disabled>&#8592; Previous</button>
-      <button class="btn-next" id="s-next-btn" onclick="sGoNext()">Next &rarr;</button>
+      <button class="btn-nav" id="s-prev-btn" onclick="sGoPrev()" disabled>← Previous</button>
+      <button class="btn-next" id="s-next-btn" onclick="sGoNext()">Next →</button>
     </div>
     <p style="text-align:center;font-size:12px;color:#94a3b8;margin-top:10px" id="s-skip-note">Answer via text, images, or both &mdash; or skip and return later.</p>
   </div>
@@ -400,7 +400,7 @@ input,textarea,select{font-family:inherit}
     </div>
     <div id="r-cards"></div>
     <div style="text-align:center;margin-top:16px">
-      <button class="btn-secondary" onclick="goBackToList()">&#8617; Back to Exams</button>
+      <button class="btn-secondary" onclick="goBackToList()">↩ Back to Exams</button>
     </div>
   </div>
 
@@ -448,7 +448,7 @@ function handleFile(type,input){
 }
 function setZone(t,name){
   document.getElementById(t+'-zone').classList.add('has-file');
-  const fn=document.getElementById(t+'-filename');fn.textContent='&#10003; '+name;fn.classList.remove('hidden');
+  const fn=document.getElementById(t+'-filename');fn.textContent='✓ '+name;fn.classList.remove('hidden');
   document.getElementById(t+'-remove').classList.remove('hidden');
 }
 function removeFile(e,t){
@@ -663,7 +663,7 @@ function renderExamList(){
   exams.forEach(exam=>{
     const tm=exam.questions.reduce((s,q)=>s+q.marks,0);
     const el=document.createElement('div');el.className='exam-card';
-    el.innerHTML=`<div class="exam-card-icon">&#128221;</div><div class="exam-card-info"><div class="exam-card-title">${exam.title}</div><div class="exam-card-meta">${exam.questions.length} questions &middot; ${tm} marks</div></div><span class="exam-card-arrow">&rarr;</span>`;
+    el.innerHTML=`<div class="exam-card-icon">&#128221;</div><div class="exam-card-info"><div class="exam-card-title">${exam.title}</div><div class="exam-card-meta">${exam.questions.length} questions &middot; ${tm} marks</div></div><span class="exam-card-arrow">→</span>`;
     el.onclick=()=>startExam(exam);c.appendChild(el);
   });
 }
@@ -687,8 +687,8 @@ function renderCurrentQ(){
   renderPageThumbs(ans);renderDots();
   document.getElementById('s-prev-btn').disabled=currentQ===0;
   const nb=document.getElementById('s-next-btn');
-  if(currentQ===total-1){nb.textContent='&#10003; Submit & Evaluate';nb.className='btn-submit-exam';nb.onclick=submitExam;}
-  else{nb.textContent='Next &rarr;';nb.className='btn-next';nb.onclick=sGoNext;}
+  if(currentQ===total-1){nb.textContent='✓ Submit & Evaluate';nb.className='btn-submit-exam';nb.onclick=submitExam;}
+  else{nb.textContent='Next →';nb.className='btn-next';nb.onclick=sGoNext;}
   const has=(ans.text&&ans.text.trim())||ans.pages.length>0;
   document.getElementById('s-skip-note').style.display=has?'none':'';
 }
@@ -820,7 +820,7 @@ function renderResults(results){
     const r=results[i];if(!r)return;
     const ratio=r.score/q.marks;const col=ratio>=0.7?'#16a34a':ratio>=0.4?'#d97706':'#dc2626';
     const el=document.createElement('div');el.className='result-card';
-    el.innerHTML=`<div class="result-q-row"><span class="result-q-badge">Q${q.questionNumber||i+1}</span><span class="result-q-text">${q.text}</span><span class="result-score" style="color:${col}">${r.score}/${q.marks}</span></div>${r.rubricBreakdown?`<div class="result-rubric-detail"><strong>Mark breakdown:</strong> ${r.rubricBreakdown}</div>`:''}<p class="result-feedback" style="margin-top:8px">${r.feedback||''}</p><div class="result-chips" style="margin-top:8px">${r.strengths?`<span class="chip-good">&#10003; ${r.strengths}</span>`:''}${r.improvements?`<span class="chip-imp">&#128204; ${r.improvements}</span>`:''}</div>`;
+    el.innerHTML=`<div class="result-q-row"><span class="result-q-badge">Q${q.questionNumber||i+1}</span><span class="result-q-text">${q.text}</span><span class="result-score" style="color:${col}">${r.score}/${q.marks}</span></div>${r.rubricBreakdown?`<div class="result-rubric-detail"><strong>Mark breakdown:</strong> ${r.rubricBreakdown}</div>`:''}<p class="result-feedback" style="margin-top:8px">${r.feedback||''}</p><div class="result-chips" style="margin-top:8px">${r.strengths?`<span class="chip-good">✓ ${r.strengths}</span>`:''}${r.improvements?`<span class="chip-imp">&#128204; ${r.improvements}</span>`:''}</div>`;
     c.appendChild(el);
   });
   showStudentScreen('s-results-screen');
