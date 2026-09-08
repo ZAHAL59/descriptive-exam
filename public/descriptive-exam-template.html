@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Descriptive Exam AI – SGOI School</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#0f172a;min-height:100vh}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit}
+.shell{min-height:100vh;display:flex;flex-direction:column}
+.header{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 20px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.header-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;flex-shrink:0}
+.header-title{font-weight:700;font-size:15px;color:#0f172a}
+.header-sub{font-size:12px;color:#64748b}
+.header-spacer{flex:1}
+.header-badge{background:#ede9fe;color:#5b21b6;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.tab-bar{background:#fff;border-bottom:1px solid #e2e8f0;display:flex;padding:0 20px}
+.tab-btn{padding:12px 20px;font-size:13px;font-weight:600;color:#64748b;border:none;background:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.tab-btn.active{color:#6366f1;border-bottom-color:#6366f1}
+.main{flex:1;padding:24px 20px;max-width:860px;margin:0 auto;width:100%}
+.section-title{font-size:20px;font-weight:800;color:#0f172a;margin-bottom:4px}
+.section-sub{font-size:13px;color:#64748b;margin-bottom:24px}
+.steps{display:flex;align-items:center;margin-bottom:28px}
+.step{display:flex;align-items:center;gap:8px}
+.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;border:2px solid #e2e8f0;background:#fff;color:#94a3b8}
+.step-num.done{background:#6366f1;border-color:#6366f1;color:#fff}
+.step-num.active{background:#fff;border-color:#6366f1;color:#6366f1}
+.step-label{font-size:12px;color:#64748b;white-space:nowrap}
+.step-label.active{color:#6366f1;font-weight:600}
+.step-label.done{color:#6366f1}
+.step-line{flex:1;height:1px;background:#e2e8f0;margin:0 10px;min-width:20px}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.card-title{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:4px}
+.card-sub{font-size:12px;color:#64748b;margin-bottom:16px}
+.model-row{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.model-label{font-size:12px;font-weight:600;color:#64748b}
+.model-pill{padding:5px 12px;border-radius:20px;border:1px solid #e2e8f0;font-size:12px;font-weight:600;color:#64748b;background:#f8fafc;transition:all .15s}
+.model-pill.selected{background:#6366f1;border-color:#6366f1;color:#fff}
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:560px){.upload-grid{grid-template-columns:1fr}}
+.upload-zone{border:2px dashed #cbd5e1;border-radius:12px;padding:24px 16px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;position:relative;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.upload-zone:hover{border-color:#6366f1;background:#fafbff}
+.upload-zone.has-file{border-color:#22c55e;border-style:solid;background:#f0fdf4}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:28px;margin-bottom:8px}
+.upload-label{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px}
+.upload-hint{font-size:11px;color:#94a3b8}
+.upload-filename{font-size:11px;color:#059669;font-weight:600;margin-top:6px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.remove-file-btn{position:absolute;top:8px;right:8px;background:#fee2e2;border:none;color:#ef4444;width:22px;height:22px;border-radius:50%;font-size:12px;font-weight:700}
+.tip-box{background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:12px 14px;font-size:12px;color:#78350f;line-height:1.6;margin-bottom:20px}
+.title-input-wrap{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.title-input-icon{font-size:22px;flex-shrink:0}
+.title-input-inner{flex:1}
+.title-input-label{font-size:11px;font-weight:700;color:#6366f1;letter-spacing:.5px;display:block;margin-bottom:5px;text-transform:uppercase}
+.title-input-field{width:100%;border:none;outline:none;font-size:16px;font-weight:700;color:#0f172a;background:transparent;padding:0}
+.title-input-field::placeholder{color:#cbd5e1;font-weight:500}
+.btn-primary{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;width:100%}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed}
+.btn-secondary{padding:10px 20px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;font-size:13px;font-weight:600;color:#374151}
+.btn-success{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:#059669;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;width:100%}
+.analyzing-box{background:#f8faff;border:1px solid #c7d2fe;border-radius:12px;padding:24px;text-align:center;margin-top:16px}
+.spinner{width:40px;height:40px;border:3px solid #e0e7ff;border-top-color:#6366f1;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.analyzing-box p{font-size:13px;color:#4338ca;font-weight:600}
+.analyzing-step{font-size:12px;color:#6366f1;margin-top:4px}
+.rubric-meta-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.rubric-edit-count{font-size:12px;color:#6366f1;font-weight:600}
+.rubric-item{border:1px solid #e2e8f0;border-radius:12px;margin-bottom:14px;overflow:hidden}
+.rubric-item-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#f8fafc;border-bottom:1px solid #e2e8f0;flex-wrap:wrap}
+.rubric-q-badge{background:#6366f1;color:#fff;font-size:12px;font-weight:700;padding:2px 10px;border-radius:20px;white-space:nowrap}
+.rubric-q-text{flex:1;font-size:13px;font-weight:600;color:#0f172a;min-width:100px}
+.rubric-marks-badge{background:#fef3c7;color:#92400e;font-size:12px;font-weight:700;padding:2px 10px;border-radius:20px;white-space:nowrap}
+.rubric-fields{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.rubric-field label{display:block;font-size:11px;font-weight:700;color:#6366f1;letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase}
+.rubric-field textarea,.rubric-field input{width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px;font-size:13px;color:#0f172a;resize:vertical;outline:none;transition:border-color .15s}
+.rubric-field textarea:focus,.rubric-field input:focus{border-color:#6366f1}
+.rubric-field input[type=number]{width:80px}
+.published-banner{background:linear-gradient(135deg,#059669,#10b981);border-radius:16px;padding:28px;text-align:center;color:#fff;margin-bottom:20px}
+.published-banner .check{font-size:44px;margin-bottom:8px}
+.published-banner h2{font-size:20px;font-weight:800;margin-bottom:4px}
+.published-banner p{font-size:13px;opacity:.85}
+.published-actions{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.s-hub-card{background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:32px 24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;cursor:pointer;transition:border-color .2s,box-shadow .2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.s-hub-card:hover{border-color:#6366f1;box-shadow:0 0 0 4px #ede9fe}
+.s-hub-icon{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.s-hub-info{flex:1}
+.s-hub-title{font-size:17px;font-weight:800;color:#0f172a;margin-bottom:4px}
+.s-hub-sub{font-size:13px;color:#64748b}
+.s-hub-arrow{font-size:20px;color:#6366f1;font-weight:700}
+.exam-list{display:flex;flex-direction:column;gap:12px}
+.exam-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.exam-card:hover{border-color:#6366f1;box-shadow:0 0 0 3px #ede9fe}
+.exam-card-icon{font-size:26px}
+.exam-card-info{flex:1}
+.exam-card-title{font-weight:700;font-size:14px;color:#0f172a}
+.exam-card-meta{font-size:12px;color:#64748b;margin-top:2px}
+.exam-card-arrow{color:#6366f1;font-size:18px;font-weight:700}
+.empty-state{text-align:center;padding:60px 20px;color:#94a3b8}
+.empty-state .empty-icon{font-size:48px;margin-bottom:12px}
+.empty-state p{font-size:14px;line-height:1.7}
+.q-topbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.back-btn{background:none;border:1px solid #e2e8f0;border-radius:8px;padding:6px 14px;font-size:13px;color:#374151}
+.dots-row{display:flex;gap:7px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.dot{width:30px;height:8px;border-radius:4px;border:none;cursor:pointer;transition:background .2s;background:#e2e8f0}
+.dot.current{background:#6366f1}
+.dot.answered{background:#22c55e}
+.dot.partial{background:#f59e0b}
+.q-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:24px 20px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:18px}
+.q-card-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.q-badge{background:#6366f1;color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px}
+.q-of{flex:1;font-size:12px;color:#94a3b8}
+.q-marks-badge{background:#fef3c7;color:#92400e;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px}
+.q-text{font-size:15px;font-weight:600;color:#0f172a;line-height:1.65;margin-bottom:20px}
+.answer-block{display:flex;flex-direction:column;gap:14px}
+.answer-block-label{font-size:11px;font-weight:700;color:#475569;letter-spacing:.5px}
+.answer-textarea{width:100%;min-height:120px;border:1.5px solid #e2e8f0;border-radius:10px;padding:12px 14px;font-size:14px;color:#0f172a;resize:vertical;outline:none;line-height:1.6;transition:border-color .15s}
+.answer-textarea:focus{border-color:#6366f1}
+.or-bar{display:flex;align-items:center;gap:10px;color:#94a3b8;font-size:12px;font-weight:600}
+.or-bar::before,.or-bar::after{content:'';flex:1;height:1px;background:#e2e8f0}
+.img-section{background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:12px;padding:16px}
+.img-section-title{font-size:11px;font-weight:700;color:#374151;letter-spacing:.4px;margin-bottom:4px}
+.img-section-sub{font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.6}
+.img-actions{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.img-action-btn{flex:1;min-width:110px;padding:10px 12px;border:1.5px dashed #94a3b8;border-radius:9px;background:#fff;font-size:12px;font-weight:700;color:#374151;display:flex;align-items:center;justify-content:center;gap:6px;transition:border-color .15s,background .15s}
+.img-action-btn:hover{border-color:#6366f1;background:#fafbff;color:#6366f1}
+.page-images{display:flex;flex-wrap:wrap;gap:10px}
+.page-thumb{position:relative;width:90px;height:90px;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;flex-shrink:0}
+.page-thumb img{width:100%;height:100%;object-fit:cover}
+.page-thumb-label{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-weight:600;text-align:center;padding:2px 0}
+.page-thumb-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(239,68,68,.9);border:none;color:#fff;font-size:10px;font-weight:700;line-height:18px;padding:0;cursor:pointer}
+.add-page-btn{width:90px;height:90px;border:2px dashed #cbd5e1;border-radius:8px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:600;color:#94a3b8;cursor:pointer;transition:border-color .15s;flex-shrink:0}
+.add-page-btn:hover{border-color:#6366f1;color:#6366f1}
+.nav-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.btn-nav{padding:10px 22px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;font-size:13px;font-weight:700;color:#374151}
+.btn-nav:disabled{opacity:.3;cursor:default}
+.btn-next{padding:10px 28px;background:#6366f1;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700}
+.btn-submit-exam{padding:10px 28px;background:#059669;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700}
+.eval-wrap{min-height:60vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.eval-box{background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:40px;text-align:center;max-width:400px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.eval-box .spinner{width:48px;height:48px;border:4px solid #e0e7ff;border-top-color:#6366f1;margin:0 auto 20px}
+.eval-box h2{font-size:19px;font-weight:800;margin-bottom:6px}
+.eval-box p{font-size:13px;color:#64748b;margin-bottom:20px}
+.prog-bar{height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden;margin-bottom:8px}
+.prog-fill{height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:3px;transition:width .4s ease;width:0}
+.eval-count{font-size:12px;color:#64748b}
+.eval-step{font-size:12px;color:#6366f1;font-weight:600;margin-top:6px;min-height:18px}
+.results-banner{background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:16px;padding:28px 24px;color:#fff;text-align:center;margin-bottom:20px}
+.results-score{font-size:56px;font-weight:900;line-height:1}
+.results-denom{font-size:28px;font-weight:400;opacity:.75}
+.results-pct{font-size:22px;font-weight:700;margin-top:6px}
+.results-student{font-size:13px;opacity:.8;margin-top:4px}
+.result-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 16px;margin-bottom:14px}
+.result-q-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.result-q-badge{background:#6366f1;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;margin-top:2px}
+.result-q-text{flex:1;font-size:13px;font-weight:600;color:#0f172a;line-height:1.5;min-width:100px}
+.result-score{font-size:17px;font-weight:900;white-space:nowrap;margin-top:1px}
+.result-rubric-detail{background:#f8fafc;border-radius:8px;padding:10px 12px;font-size:12px;color:#475569;line-height:1.6;margin-bottom:8px}
+.result-feedback{font-size:13px;color:#334155;line-height:1.65;margin-bottom:8px}
+.result-chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip-good{background:#dcfce7;color:#166534;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px}
+.chip-imp{background:#fef9c3;color:#713f12;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px}
+.cam-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:200}
+.cam-modal{background:#fff;border-radius:16px;padding:20px;width:min(95vw,480px);display:flex;flex-direction:column;gap:12px}
+.cam-modal-header{display:flex;justify-content:space-between;align-items:center}
+.cam-modal-title{font-weight:700;font-size:15px}
+.cam-close{background:none;border:none;font-size:20px;color:#64748b;line-height:1}
+#cam-video{width:100%;border-radius:10px;background:#000;display:block}
+.cam-hint{font-size:12px;color:#64748b;text-align:center}
+.cam-capture{padding:12px;background:#6366f1;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;width:100%}
+.cam-err{color:#ef4444;text-align:center;padding:16px;font-size:13px}
+.hidden{display:none!important}
+.mt16{margin-top:16px}
+.gap10{display:flex;gap:10px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="header">
+  <div class="header-logo">S</div>
+  <div>
+    <div class="header-title">SGOI School</div>
+    <div class="header-sub">Descriptive Exam AI</div>
+  </div>
+  <div class="header-spacer"></div>
+  <span class="header-badge">&#10022; Live &middot; Gemini AI</span>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn" id="tab-student" onclick="switchTab('student')">&#128100; Student View</button>
+  <button class="tab-btn active" id="tab-teacher" onclick="switchTab('teacher')">&#128421; Teacher View</button>
+</div>
+
+<!-- TEACHER VIEW -->
+<div id="teacher-view" class="main">
+
+  <!-- T1 Upload -->
+  <div id="t-upload-screen">
+    <div class="section-title">Exam Hub</div>
+    <div class="section-sub">Create Descriptive Exam</div>
+    <div class="steps">
+      <div class="step"><div class="step-num active">1</div><div class="step-label active">Upload papers</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step-num" id="step2-num">2</div><div class="step-label" id="step2-label">Review &amp; edit rubric</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step-num" id="step3-num">3</div><div class="step-label" id="step3-label">Publish for students</div></div>
+    </div>
+    <div class="model-row">
+      <span class="model-label">&#9889; AI Model</span>
+      <button class="model-pill selected" onclick="selectModel(this,'gemini-2.5-flash-preview-05-20')">Gemini 2.5 Flash &middot; Recommended</button>
+      <button class="model-pill" onclick="selectModel(this,'gemini-2.0-flash')">Gemini 2.0 Flash</button>
+      <button class="model-pill" onclick="selectModel(this,'gemini-1.5-flash')">Gemini 1.5 Flash</button>
+    </div>
+    <div style="font-size:11px;color:#94a3b8;margin-bottom:20px">Key secured on server</div>
+    <!-- Exam title – clean, at top -->
+    <div class="title-input-wrap">
+      <div class="title-input-icon">&#128221;</div>
+      <div class="title-input-inner">
+        <label class="title-input-label">Exam Title</label>
+        <input class="title-input-field" type="text" id="exam-title-input" placeholder="e.g. Science Chapter 4 Test" autocomplete="off"/>
+      </div>
+    </div>
+
+    <div class="tip-box"><strong>Tip:</strong> Adding a model answer boosts rubric quality &mdash; Gemini extracts exact expected content, key phrases, and scoring criteria directly from your official answers.</div>
+    <div class="upload-grid">
+      <div>
+        <div class="card-title" style="margin-bottom:8px">Question Paper <span style="color:#ef4444;font-size:11px">* Required</span></div>
+        <div class="upload-zone" id="qp-zone">
+          <input type="file" id="qp-file" accept=".pdf,image/*" onchange="handleFile('qp',this)"/>
+          <div class="upload-icon">&#128196;</div>
+          <div class="upload-label">Question Paper PDF</div>
+          <div class="upload-hint">Click or drag &amp; drop</div>
+          <div class="upload-filename hidden" id="qp-filename"></div>
+          <button class="remove-file-btn hidden" id="qp-remove" onclick="removeFile(event,'qp')">&#10005;</button>
+        </div>
+      </div>
+      <div>
+        <div class="card-title" style="margin-bottom:8px">Model Answer Paper <span style="color:#22c55e;font-size:11px">Optional &middot; boosts quality</span></div>
+        <div class="upload-zone" id="ma-zone">
+          <input type="file" id="ma-file" accept=".pdf,image/*" onchange="handleFile('ma',this)"/>
+          <div class="upload-icon">&#128203;</div>
+          <div class="upload-label">Model Answer PDF</div>
+          <div class="upload-hint">Official answer / marking scheme</div>
+          <div class="upload-filename hidden" id="ma-filename"></div>
+          <button class="remove-file-btn hidden" id="ma-remove" onclick="removeFile(event,'ma')">&#10005;</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" id="analyse-btn" onclick="analyseWithGemini()">&#10022; Analyse with Gemini AI</button>
+    <div id="analysing-box" class="analyzing-box hidden">
+      <div class="spinner"></div>
+      <p>Reading your papers&hellip;</p>
+      <div class="analyzing-step" id="analysing-step">Sending files to Gemini AI</div>
+    </div>
+  </div>
+
+  <!-- T2 Rubric -->
+  <div id="t-rubric-screen" class="hidden">
+    <div class="section-title">Exam Hub</div>
+    <div class="section-sub">Review Rubric</div>
+    <div class="steps">
+      <div class="step"><div class="step-num done">&#10003;</div><div class="step-label done">Upload papers</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step-num active">2</div><div class="step-label active">Review &amp; edit rubric</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step-num">3</div><div class="step-label">Publish for students</div></div>
+    </div>
+    <div class="rubric-meta-row">
+      <span style="font-size:13px;color:#64748b">Rubric generated &mdash; review each question, edit any field, then publish.</span>
+      <div class="gap10">
+        <span class="rubric-edit-count" id="edit-count-label">0 question(s) edited</span>
+        <button class="btn-secondary" onclick="resetRubric()">Reset all</button>
+      </div>
+    </div>
+    <div id="rubric-list"></div>
+    <button class="btn-success mt16" onclick="publishExam()">&#10003; Publish Exam for Students</button>
+  </div>
+
+  <!-- T3 Published -->
+  <div id="t-published-screen" class="hidden">
+    <div class="published-banner">
+      <div class="check">&#127881;</div>
+      <h2>Exam Published!</h2>
+      <p>Students can now select and attend this exam.</p>
+      <div class="published-actions">
+        <button class="btn-secondary" onclick="resetTeacher()">Back to Exam Hub</button>
+        <button class="btn-secondary" onclick="switchTab('student')">Switch to Student View &rarr;</button>
+      </div>
+    </div>
+    <div id="published-exam-summary"></div>
+  </div>
+
+</div><!-- /teacher-view -->
+
+<!-- STUDENT VIEW -->
+<div id="student-view" class="main hidden">
+
+  <!-- S0 Hub -->
+  <div id="s-hub-screen">
+    <div class="section-title">Exam Hub</div>
+    <div class="section-sub">Select exam type to continue</div>
+    <div class="s-hub-card" onclick="goToExamList()">
+      <div class="s-hub-icon">&#128221;</div>
+      <div class="s-hub-info">
+        <div class="s-hub-title">Descriptive Exam</div>
+        <div class="s-hub-sub">AI-evaluated &middot; Written &amp; handwritten answers &middot; Gemini AI</div>
+      </div>
+      <span class="s-hub-arrow">&rarr;</span>
+    </div>
+  </div>
+
+  <!-- S1 List -->
+  <div id="s-list-screen" class="hidden">
+    <div class="section-title">Available Exams</div>
+    <div class="section-sub">Select an exam to attend. Your answers will be AI-evaluated with detailed feedback.</div>
+    <div class="exam-list" id="s-exam-list"></div>
+  </div>
+
+  <!-- S2 Q-by-Q -->
+  <div id="s-exam-screen" class="hidden">
+    <div class="q-topbar">
+      <button class="back-btn" onclick="goBackToList()">&#8592; Exams</button>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:15px;color:#0f172a" id="s-exam-name"></div>
+        <div style="font-size:12px;color:#64748b" id="s-exam-subject"></div>
+      </div>
+      <span class="header-badge" id="s-student-badge"></span>
+    </div>
+    <div class="dots-row" id="s-dots"></div>
+    <div class="q-card">
+      <div class="q-card-header">
+        <span class="q-badge" id="s-q-num">Q1</span>
+        <span class="q-of" id="s-q-of">1 of 3</span>
+        <span class="q-marks-badge" id="s-q-marks">5 marks</span>
+      </div>
+      <p class="q-text" id="s-q-text"></p>
+      <div class="answer-block">
+        <div class="answer-block-label">&#9999;&#65039; TYPE YOUR ANSWER</div>
+        <textarea class="answer-textarea" id="s-answer-text" placeholder="Write your answer here&hellip;" oninput="onAnswerInput()"></textarea>
+        <div class="or-bar">or</div>
+        <div class="img-section">
+          <div class="img-section-title">&#128247; UPLOAD HANDWRITTEN ANSWER &mdash; PAGE BY PAGE</div>
+          <div class="img-section-sub">
+            Take a clear photo of <strong>each page</strong> of your handwritten answer for this question.<br>
+            Tap <strong>+ Add page</strong> for every new page you want to include.<br>
+            Gemini will read all pages together and evaluate your complete answer.
+          </div>
+          <div class="img-actions">
+            <button class="img-action-btn" onclick="openCamera()">&#128248; Camera</button>
+            <button class="img-action-btn" onclick="document.getElementById('s-file-input').click()">&#128193; Upload image</button>
+            <input type="file" id="s-file-input" accept="image/*" style="display:none" onchange="handleImgUpload(event)"/>
+          </div>
+          <div class="page-images" id="s-page-images"></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-nav" id="s-prev-btn" onclick="sGoPrev()" disabled>&#8592; Previous</button>
+      <button class="btn-next" id="s-next-btn" onclick="sGoNext()">Next &rarr;</button>
+    </div>
+    <p style="text-align:center;font-size:12px;color:#94a3b8;margin-top:10px" id="s-skip-note">Answer via text, images, or both &mdash; or skip and return later.</p>
+  </div>
+
+  <!-- S3 Evaluating -->
+  <div id="s-eval-screen" class="hidden">
+    <div class="eval-wrap">
+      <div class="eval-box">
+        <div class="spinner"></div>
+        <h2>Evaluating your answers&hellip;</h2>
+        <p>Gemini AI is reviewing each response against the rubric</p>
+        <div class="prog-bar"><div class="prog-fill" id="s-prog-fill"></div></div>
+        <div class="eval-count" id="s-eval-count">0 / 0 evaluated</div>
+        <div class="eval-step" id="s-eval-step"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4 Results -->
+  <div id="s-results-screen" class="hidden">
+    <div class="results-banner">
+      <div class="results-score"><span id="r-scored">-</span><span class="results-denom" id="r-total"></span></div>
+      <div class="results-pct" id="r-pct">-</div>
+      <div class="results-student" id="r-student"></div>
+    </div>
+    <div id="r-cards"></div>
+    <div style="text-align:center;margin-top:16px">
+      <button class="btn-secondary" onclick="goBackToList()">&#8617; Back to Exams</button>
+    </div>
+  </div>
+
+</div><!-- /student-view -->
+</div><!-- /shell -->
+
+<!-- Camera modal -->
+<div class="cam-overlay hidden" id="cam-overlay">
+  <div class="cam-modal">
+    <div class="cam-modal-header">
+      <span class="cam-modal-title">&#128247; Capture Answer Page</span>
+      <button class="cam-close" onclick="closeCamera()">&#10005;</button>
+    </div>
+    <div id="cam-err" class="cam-err hidden">Camera access denied. Please allow camera permissions and try again.</div>
+    <video id="cam-video" playsinline muted autoplay></video>
+    <p class="cam-hint">Hold your written page steady &mdash; tap Capture when ready</p>
+    <button class="cam-capture" id="cam-capture-btn" onclick="doCapture()">&#128248; Capture</button>
+  </div>
+</div>
+
+<script>
+const GEMINI_API_KEY = (typeof __GEMINI_KEY__ !== 'undefined' ? __GEMINI_KEY__ : '') || '';
+let selectedModel = 'gemini-2.5-flash-preview-05-20';
+let qpFile=null,maFile=null;
+let originalRubric=[],editedRubric=[],editCount=0;
+let studentName='',activeExam=null,currentQ=0,answers={};
+let camStream=null;
+
+function saveExams(e){try{localStorage.setItem('sgoi_desc_exams',JSON.stringify(e));}catch{}}
+function loadExams(){try{const s=localStorage.getItem('sgoi_desc_exams');return s?JSON.parse(s):[];}catch{return[];}}
+
+function switchTab(t){
+  document.getElementById('teacher-view').classList.toggle('hidden',t!=='teacher');
+  document.getElementById('student-view').classList.toggle('hidden',t!=='student');
+  document.getElementById('tab-teacher').classList.toggle('active',t==='teacher');
+  document.getElementById('tab-student').classList.toggle('active',t==='student');
+  if(t==='student'){showStudentScreen('s-hub-screen');}
+  
+}
+
+function triggerFile(id){document.getElementById(id).click();}
+function handleFile(type,input){
+  const f=input.files?.[0];if(!f)return;
+  if(type==='qp'){qpFile=f;setZone('qp',f.name);}else{maFile=f;setZone('ma',f.name);}
+}
+function setZone(t,name){
+  document.getElementById(t+'-zone').classList.add('has-file');
+  const fn=document.getElementById(t+'-filename');fn.textContent='&#10003; '+name;fn.classList.remove('hidden');
+  document.getElementById(t+'-remove').classList.remove('hidden');
+}
+function removeFile(e,t){
+  e.stopPropagation();
+  if(t==='qp')qpFile=null;else maFile=null;
+  document.getElementById(t+'-zone').classList.remove('has-file');
+  document.getElementById(t+'-filename').classList.add('hidden');
+  document.getElementById(t+'-remove').classList.add('hidden');
+  document.getElementById(t+'-file').value='';
+}
+function selectModel(btn,model){
+  selectedModel=model;
+  document.querySelectorAll('.model-pill').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+async function analyseWithGemini(){
+  if(!qpFile){alert('Please upload a Question Paper first.');return;}
+  const title=document.getElementById('exam-title-input').value.trim()||'Untitled Exam';
+  const subject='';
+  const apiKey=GEMINI_API_KEY;
+  if(!apiKey||apiKey===''){alert('No Gemini API key found.\n\nFor Vercel deployment: add GEMINI_API_KEY to your environment variables.\nFor local testing: replace __GEMINI_KEY__ in the HTML with your key.');return;}
+  document.getElementById('analyse-btn').disabled=true;
+  document.getElementById('analysing-box').classList.remove('hidden');
+  try{
+    setStep('Reading your papers...');
+    const qpB64=await fileToB64(qpFile);
+    const qpMime=qpFile.type||'application/pdf';
+    setStep('Sending files to Gemini AI...');
+    const parts=[];
+    parts.push({inline_data:{mime_type:qpMime,data:qpB64}});
+    parts.push({text:'Above is the Question Paper.'});
+    if(maFile){
+      const maB64=await fileToB64(maFile);
+      parts.push({inline_data:{mime_type:maFile.type||'application/pdf',data:maB64}});
+      parts.push({text:'Above is the Model Answer / Marking Scheme.'});
+    }
+    parts.push({text:`You are an expert exam paper analyser for school/college exams.
+Extract ALL questions from the question paper and build a detailed marking rubric.
+${maFile?'Use the model answer to produce richer, more specific rubric criteria.':''}
+
+Return ONLY a valid JSON array (no markdown, no backticks, no extra text):
+[
+  {
+    "id":"q1",
+    "questionNumber":1,
+    "text":"<full question text>",
+    "marks":<integer>,
+    "keyPoints":"<bullet list of key content points, each on new line starting with - >",
+    "markingCriteria":"<how marks are split, e.g. 2 marks for definition, 2 marks for example, 1 mark for diagram>",
+    "expectedKeywords":"<comma-separated key terms Gemini should look for in student answers>",
+    "commonMistakes":"<what students commonly get wrong for this type of question>"
+  }
+]
+Be thorough. Extract every question including sub-parts (keep sub-parts as one item with combined marks if they share one question number).`});
+    setStep('Generating rubric...');
+    const raw=await callGemini(parts);
+    const clean=raw.replace(/\`\`\`json|\`\`\`/g,'').trim();
+    const parsed=JSON.parse(clean);
+    originalRubric=JSON.parse(JSON.stringify(parsed));
+    editedRubric=JSON.parse(JSON.stringify(parsed));
+    editedRubric._meta={title,subject};
+    editCount=0;
+    showTeacherScreen('t-rubric-screen');
+    renderRubric();
+  }catch(err){
+    alert('Gemini error: '+err.message+'\n\nPlease check your API key and try again.');
+    document.getElementById('analyse-btn').disabled=false;
+    document.getElementById('analysing-box').classList.add('hidden');
+  }
+}
+function setStep(t){document.getElementById('analysing-step').textContent=t;}
+async function fileToB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f);});}
+
+function renderRubric(){
+  const c=document.getElementById('rubric-list');c.innerHTML='';
+  editedRubric.forEach((q,i)=>{
+    if(typeof q.text!=='string')return;
+    const d=document.createElement('div');d.className='rubric-item';
+    d.innerHTML=`<div class="rubric-item-header">
+      <span class="rubric-q-badge">Q${q.questionNumber||i+1}</span>
+      <span class="rubric-q-text">${q.text}</span>
+      <span class="rubric-marks-badge">${q.marks} marks</span>
+    </div>
+    <div class="rubric-fields">
+      <div class="rubric-field"><label>Key Points (what students should write)</label><textarea rows="4" oninput="rubricEdit(${i},'keyPoints',this.value)">${q.keyPoints||''}</textarea></div>
+      <div class="rubric-field"><label>Marking Criteria (how marks are split)</label><textarea rows="3" oninput="rubricEdit(${i},'markingCriteria',this.value)">${q.markingCriteria||''}</textarea></div>
+      <div class="rubric-field"><label>Expected Keywords / Phrases</label><textarea rows="2" oninput="rubricEdit(${i},'expectedKeywords',this.value)">${q.expectedKeywords||''}</textarea></div>
+      <div class="rubric-field"><label>Common Mistakes to Watch For</label><textarea rows="2" oninput="rubricEdit(${i},'commonMistakes',this.value)">${q.commonMistakes||''}</textarea></div>
+      <div class="rubric-field"><label>Total Marks</label><input type="number" min="0" max="100" value="${q.marks}" oninput="rubricEdit(${i},'marks',parseInt(this.value)||0)"/></div>
+    </div>`;
+    c.appendChild(d);
+  });
+  updateEditCount();
+}
+function rubricEdit(i,f,v){
+  editedRubric[i][f]=v;
+  editCount=editedRubric.filter((q,idx)=>{
+    const o=originalRubric[idx];if(!o)return false;
+    return['keyPoints','markingCriteria','expectedKeywords','commonMistakes','marks'].some(k=>q[k]!==o[k]);
+  }).length;
+  updateEditCount();
+}
+function updateEditCount(){document.getElementById('edit-count-label').textContent=editCount+' question(s) edited - changes saved locally';}
+function resetRubric(){if(!confirm('Reset all edits to original AI-generated rubric?'))return;editedRubric=JSON.parse(JSON.stringify(originalRubric));editCount=0;renderRubric();}
+
+function publishExam(){
+  const meta=editedRubric._meta||{};
+  const exam={
+    id:'exam-'+Date.now(),
+    title:meta.title||'Untitled Exam',
+    subject:'',
+    publishedAt:new Date().toISOString(),
+    questions:editedRubric.filter(q=>typeof q.text==='string').map((q,i)=>({
+      id:q.id||'q'+(i+1),
+      questionNumber:q.questionNumber||i+1,
+      text:q.text,
+      marks:q.marks||0,
+      rubric:{keyPoints:q.keyPoints||'',markingCriteria:q.markingCriteria||'',expectedKeywords:q.expectedKeywords||'',commonMistakes:q.commonMistakes||''}
+    }))
+  };
+  const existing=loadExams();existing.unshift(exam);saveExams(existing);
+  showTeacherScreen('t-published-screen');
+  const s=document.getElementById('published-exam-summary');
+  s.innerHTML=`<div class="card" style="margin-top:0"><div class="card-title">${exam.title}</div><div class="card-sub">${exam.questions.length} questions &middot; ${exam.questions.reduce((a,q)=>a+q.marks,0)} total marks</div>${exam.questions.map((q,i)=>`<div style="font-size:13px;color:#374151;padding:6px 0;border-top:1px solid #f1f5f9"><strong>Q${q.questionNumber}.</strong> ${q.text} <em style="color:#6366f1">(${q.marks} marks)</em></div>`).join('')}</div>`;
+}
+function resetTeacher(){
+  qpFile=null;maFile=null;originalRubric=[];editedRubric=[];editCount=0;
+  ['qp','ma'].forEach(t=>{
+    document.getElementById(t+'-zone').classList.remove('has-file');
+    document.getElementById(t+'-filename').classList.add('hidden');
+    document.getElementById(t+'-remove').classList.add('hidden');
+    document.getElementById(t+'-file').value='';
+  });
+  document.getElementById('exam-title-input').value='';
+  document.getElementById('analyse-btn').disabled=false;
+  document.getElementById('analysing-box').classList.add('hidden');
+  showTeacherScreen('t-upload-screen');
+if(document.getElementById('student-view').classList.contains('hidden')===false){showStudentScreen('s-hub-screen');}
+}
+function showTeacherScreen(id){
+  ['t-upload-screen','t-rubric-screen','t-published-screen'].forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));
+}
+
+// STUDENT
+function goToExamList(){showStudentScreen('s-list-screen');renderExamList();}
+function renderExamList(){
+  const exams=loadExams();const c=document.getElementById('s-exam-list');c.innerHTML='';
+  if(!exams.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">&#128219;</div><p>No exams published yet.<br>Ask your teacher to publish an exam in <strong>Teacher View</strong>.</p></div>';return;}
+  exams.forEach(exam=>{
+    const tm=exam.questions.reduce((s,q)=>s+q.marks,0);
+    const el=document.createElement('div');el.className='exam-card';
+    el.innerHTML=`<div class="exam-card-icon">&#128221;</div><div class="exam-card-info"><div class="exam-card-title">${exam.title}</div><div class="exam-card-meta">${exam.questions.length} questions &middot; ${tm} marks</div></div><span class="exam-card-arrow">&rarr;</span>`;
+    el.onclick=()=>startExam(exam);c.appendChild(el);
+  });
+}
+function goBackToList(){stopCamera();showStudentScreen('s-hub-screen');}
+
+function startExam(exam){
+  activeExam=exam;currentQ=0;answers={};
+  exam.questions.forEach(q=>{answers[q.id]={text:'',pages:[]};});
+  document.getElementById('s-exam-name').textContent=exam.title;
+  document.getElementById('s-exam-subject').textContent=exam.subject;
+  document.getElementById('s-student-badge').textContent=studentName;
+  showStudentScreen('s-exam-screen');renderCurrentQ();
+}
+function renderCurrentQ(){
+  const q=activeExam.questions[currentQ];const total=activeExam.questions.length;const ans=answers[q.id];
+  document.getElementById('s-q-num').textContent='Q'+(q.questionNumber||currentQ+1);
+  document.getElementById('s-q-of').textContent=(currentQ+1)+' of '+total;
+  document.getElementById('s-q-marks').textContent=q.marks+' marks';
+  document.getElementById('s-q-text').textContent=q.text;
+  document.getElementById('s-answer-text').value=ans.text||'';
+  renderPageThumbs(ans);renderDots();
+  document.getElementById('s-prev-btn').disabled=currentQ===0;
+  const nb=document.getElementById('s-next-btn');
+  if(currentQ===total-1){nb.textContent='&#10003; Submit & Evaluate';nb.className='btn-submit-exam';nb.onclick=submitExam;}
+  else{nb.textContent='Next &rarr;';nb.className='btn-next';nb.onclick=sGoNext;}
+  const has=(ans.text&&ans.text.trim())||ans.pages.length>0;
+  document.getElementById('s-skip-note').style.display=has?'none':'';
+}
+function renderPageThumbs(ans){
+  const c=document.getElementById('s-page-images');c.innerHTML='';
+  ans.pages.forEach((pg,i)=>{
+    const w=document.createElement('div');w.className='page-thumb';
+    w.innerHTML=`<img src="data:image/jpeg;base64,${pg.b64}" alt="Page ${i+1}"/><div class="page-thumb-label">Page ${i+1}</div><button class="page-thumb-remove" onclick="removePage(${i})">&#10005;</button>`;
+    c.appendChild(w);
+  });
+  const ab=document.createElement('div');ab.className='add-page-btn';
+  ab.innerHTML='<span style="font-size:20px">+</span><span>Add page</span>';
+  ab.onclick=()=>document.getElementById('s-file-input').click();
+  c.appendChild(ab);
+}
+function renderDots(){
+  const c=document.getElementById('s-dots');c.innerHTML='';
+  activeExam.questions.forEach((q,i)=>{
+    const a=answers[q.id];
+    const hasT=a.text&&a.text.trim();const hasI=a.pages.length>0;
+    const cls=i===currentQ?'current':hasT&&hasI?'answered':hasT||hasI?'partial':'';
+    const b=document.createElement('button');b.className='dot '+cls;
+    b.title='Q'+(q.questionNumber||i+1);
+    b.onclick=()=>{saveCurrentText();currentQ=i;renderCurrentQ();};
+    c.appendChild(b);
+  });
+}
+function saveCurrentText(){if(!activeExam)return;answers[activeExam.questions[currentQ].id].text=document.getElementById('s-answer-text').value;}
+function onAnswerInput(){saveCurrentText();renderDots();const q=activeExam.questions[currentQ];const a=answers[q.id];document.getElementById('s-skip-note').style.display=((a.text&&a.text.trim())||a.pages.length>0)?'none':'';}
+function sGoPrev(){saveCurrentText();if(currentQ>0){currentQ--;renderCurrentQ();}}
+function sGoNext(){saveCurrentText();if(currentQ<activeExam.questions.length-1){currentQ++;renderCurrentQ();}}
+
+async function handleImgUpload(e){
+  const f=e.target.files?.[0];if(!f)return;
+  const b64=await resizeImg(f);
+  const q=activeExam.questions[currentQ];answers[q.id].pages.push({b64,label:f.name});
+  renderCurrentQ();e.target.value='';
+}
+function removePage(idx){const q=activeExam.questions[currentQ];answers[q.id].pages.splice(idx,1);renderCurrentQ();}
+async function resizeImg(f,max=1400){return new Promise(res=>{const img=new Image();const url=URL.createObjectURL(f);img.onload=()=>{const sc=Math.min(1,max/Math.max(img.width,img.height));const w=Math.round(img.width*sc),h=Math.round(img.height*sc);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);URL.revokeObjectURL(url);res(c.toDataURL('image/jpeg',.85).split(',')[1]);};img.src=url;});}
+
+async function openCamera(){
+  document.getElementById('cam-overlay').classList.remove('hidden');
+  document.getElementById('cam-err').classList.add('hidden');
+  document.getElementById('cam-video').style.display='block';
+  document.getElementById('cam-capture-btn').style.display='block';
+  try{camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});document.getElementById('cam-video').srcObject=camStream;document.getElementById('cam-video').play();}
+  catch{document.getElementById('cam-err').classList.remove('hidden');document.getElementById('cam-video').style.display='none';document.getElementById('cam-capture-btn').style.display='none';}
+}
+function stopCamera(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}}
+function closeCamera(){stopCamera();document.getElementById('cam-overlay').classList.add('hidden');}
+function doCapture(){
+  const v=document.getElementById('cam-video');const c=document.createElement('canvas');
+  c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);
+  const b64=c.toDataURL('image/jpeg',.88).split(',')[1];
+  stopCamera();document.getElementById('cam-overlay').classList.add('hidden');
+  const q=activeExam.questions[currentQ];
+  answers[q.id].pages.push({b64,label:'Camera - Page '+(answers[q.id].pages.length+1)});
+  renderCurrentQ();
+}
+
+async function submitExam(){
+  saveCurrentText();
+  const hasAny=activeExam.questions.some(q=>{const a=answers[q.id];return(a.text&&a.text.trim())||a.pages.length>0;});
+  if(!hasAny){alert('Please answer at least one question before submitting.');return;}
+  showStudentScreen('s-eval-screen');
+  const total=activeExam.questions.length;const results=[];
+  for(let i=0;i<total;i++){
+    const q=activeExam.questions[i];const a=answers[q.id];
+    setProg(i,total,'Evaluating Q'+(q.questionNumber||i+1)+'...');
+    if(!a.text?.trim()&&a.pages.length===0){results.push({score:0,rubricBreakdown:'',feedback:'No answer provided for this question.',strengths:'-',improvements:'Attempt all questions in future exams.'});continue;}
+    try{results.push(await evaluateQ(q,a));}
+    catch(err){results.push({score:0,rubricBreakdown:'',feedback:'Evaluation failed: '+err.message,strengths:'',improvements:''});}
+  }
+  setProg(total,total,'Done!');
+  await new Promise(r=>setTimeout(r,500));
+  renderResults(results);
+}
+function setProg(done,total,step){
+  document.getElementById('s-prog-fill').style.width=(done/total*100)+'%';
+  document.getElementById('s-eval-count').textContent=done+' / '+total+' evaluated';
+  document.getElementById('s-eval-step').textContent=step;
+}
+async function evaluateQ(q,a){
+  const rb=q.rubric||{};
+  const parts=[];
+  parts.push({text:`You are an expert school exam evaluator.
+
+Question ${q.questionNumber} (${q.marks} marks):
+"${q.text}"
+
+MARKING RUBRIC:
+- Key points expected: ${rb.keyPoints||'N/A'}
+- Marking criteria: ${rb.markingCriteria||'N/A'}
+- Expected keywords/phrases: ${rb.expectedKeywords||'N/A'}
+- Common mistakes to watch: ${rb.commonMistakes||'N/A'}
+
+Carefully evaluate the student's answer below against this rubric.
+If handwritten pages are provided, read every page carefully before scoring.
+
+Return ONLY valid JSON (no markdown, no backticks):
+{
+  "score": <integer 0-${q.marks}>,
+  "rubricBreakdown": "<step-by-step mark allocation e.g. '2/2 for definition, 1/2 for example (incomplete), 0/1 for diagram missing'>",
+  "feedback": "<3-4 sentences of specific, constructive feedback referencing the rubric criteria>",
+  "strengths": "<1-2 sentences on what the student did well>",
+  "improvements": "<1-2 sentences on specific things to add or improve>"
+}`});
+  if(a.text&&a.text.trim())parts.push({text:'\nStudent typed answer:\n'+a.text});
+  a.pages.forEach((pg,i)=>{
+    parts.push({inline_data:{mime_type:'image/jpeg',data:pg.b64}});
+    parts.push({text:'(Handwritten answer page '+(i+1)+' of '+a.pages.length+')'});
+  });
+  const raw=await callGemini(parts);
+  return JSON.parse(raw.replace(/\`\`\`json|\`\`\`/g,'').trim());
+}
+
+function renderResults(results){
+  const tm=activeExam.questions.reduce((s,q)=>s+q.marks,0);
+  const scored=results.reduce((s,r)=>s+(r?.score||0),0);
+  const pct=tm?Math.round(scored/tm*100):0;
+  document.getElementById('r-scored').textContent=scored;
+  document.getElementById('r-total').textContent='/'+tm;
+  document.getElementById('r-pct').textContent=pct+'%';
+  document.getElementById('r-student').textContent=activeExam.title;
+  const c=document.getElementById('r-cards');c.innerHTML='';
+  activeExam.questions.forEach((q,i)=>{
+    const r=results[i];if(!r)return;
+    const ratio=r.score/q.marks;const col=ratio>=0.7?'#16a34a':ratio>=0.4?'#d97706':'#dc2626';
+    const el=document.createElement('div');el.className='result-card';
+    el.innerHTML=`<div class="result-q-row"><span class="result-q-badge">Q${q.questionNumber||i+1}</span><span class="result-q-text">${q.text}</span><span class="result-score" style="color:${col}">${r.score}/${q.marks}</span></div>${r.rubricBreakdown?`<div class="result-rubric-detail"><strong>Mark breakdown:</strong> ${r.rubricBreakdown}</div>`:''}<p class="result-feedback" style="margin-top:8px">${r.feedback||''}</p><div class="result-chips" style="margin-top:8px">${r.strengths?`<span class="chip-good">&#10003; ${r.strengths}</span>`:''}${r.improvements?`<span class="chip-imp">&#128204; ${r.improvements}</span>`:''}</div>`;
+    c.appendChild(el);
+  });
+  showStudentScreen('s-results-screen');
+}
+function showStudentScreen(id){
+  ['s-hub-screen','s-list-screen','s-exam-screen','s-eval-screen','s-results-screen'].forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));
+}
+
+async function callGemini(parts){
+  const key=GEMINI_API_KEY;
+  if(!key)throw new Error('No API key. Set GEMINI_API_KEY environment variable in Vercel.');
+  const model=selectedModel||'gemini-2.0-flash';
+  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{parts}],generationConfig:{temperature:0.2,maxOutputTokens:4096}})
+  });
+  if(!r.ok){const t=await r.text();throw new Error('Gemini '+r.status+': '+t.slice(0,200));}
+  const d=await r.json();
+  return d.candidates?.[0]?.content?.parts?.[0]?.text||'{}';
+}
+
+showTeacherScreen('t-upload-screen');
+if(document.getElementById('student-view').classList.contains('hidden')===false){showStudentScreen('s-hub-screen');}
+</script>
+</body>
+</html>
