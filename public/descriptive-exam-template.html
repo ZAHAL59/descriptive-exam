@@ -67,16 +67,30 @@ input,textarea,select{font-family:inherit}
 .analyzing-step{font-size:12px;color:#6366f1;margin-top:4px}
 .rubric-meta-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px}
 .rubric-edit-count{font-size:12px;color:#6366f1;font-weight:600}
-.rubric-item{border:1px solid #e2e8f0;border-radius:12px;margin-bottom:14px;overflow:hidden}
-.rubric-item-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#f8fafc;border-bottom:1px solid #e2e8f0;flex-wrap:wrap}
-.rubric-q-badge{background:#6366f1;color:#fff;font-size:12px;font-weight:700;padding:2px 10px;border-radius:20px;white-space:nowrap}
-.rubric-q-text{flex:1;font-size:13px;font-weight:600;color:#0f172a;min-width:100px}
-.rubric-marks-badge{background:#fef3c7;color:#92400e;font-size:12px;font-weight:700;padding:2px 10px;border-radius:20px;white-space:nowrap}
-.rubric-fields{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
-.rubric-field label{display:block;font-size:11px;font-weight:700;color:#6366f1;letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase}
-.rubric-field textarea,.rubric-field input{width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px;font-size:13px;color:#0f172a;resize:vertical;outline:none;transition:border-color .15s}
-.rubric-field textarea:focus,.rubric-field input:focus{border-color:#6366f1}
-.rubric-field input[type=number]{width:80px}
+.rubric-item{border:1px solid #e2e8f0;border-radius:16px;margin-bottom:20px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.rubric-item-header{display:flex;align-items:flex-start;gap:12px;padding:16px 20px;background:#f8fafc;border-bottom:1px solid #e2e8f0;flex-wrap:wrap}
+.rubric-q-badge{background:#6366f1;color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap;margin-top:2px}
+.rubric-q-text{flex:1;font-size:15px;font-weight:700;color:#0f172a;min-width:100px;line-height:1.5}
+.rubric-marks-wrap{display:flex;align-items:center;gap:6px;margin-left:auto}
+.rubric-marks-label{font-size:12px;color:#64748b}
+.rubric-marks-stepper{display:flex;align-items:center;gap:0;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;background:#fff}
+.rubric-marks-stepper button{width:28px;height:28px;border:none;background:none;font-size:16px;color:#6366f1;font-weight:700;cursor:pointer;transition:background .15s}
+.rubric-marks-stepper button:hover{background:#ede9fe}
+.rubric-marks-stepper input{width:44px;height:28px;border:none;border-left:1px solid #e2e8f0;border-right:1px solid #e2e8f0;text-align:center;font-size:14px;font-weight:700;color:#0f172a;outline:none}
+.rubric-model-answer-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px;margin:0 20px 0 20px;margin-top:16px;font-size:13px;color:#166534;line-height:1.6}
+.rubric-model-answer-box strong{color:#15803d;font-weight:700}
+.rubric-fields{padding:16px 20px;display:flex;flex-direction:column;gap:16px}
+.rubric-field-label{font-size:11px;font-weight:700;color:#6366f1;letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.rubric-field-label span{font-size:10px;color:#94a3b8;font-weight:500;text-transform:none;letter-spacing:0}
+.rubric-field textarea,.rubric-field input[type=text]{width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;font-size:13px;color:#0f172a;resize:vertical;outline:none;transition:border-color .15s;line-height:1.6;background:#fff}
+.rubric-field textarea:focus,.rubric-field input[type=text]:focus{border-color:#6366f1;box-shadow:0 0 0 3px #ede9fe}
+.keyword-wrap{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:36px;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;background:#fff;cursor:text;transition:border-color .15s}
+.keyword-wrap:focus-within{border-color:#6366f1;box-shadow:0 0 0 3px #ede9fe}
+.keyword-tag{display:flex;align-items:center;gap:4px;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px}
+.keyword-tag button{background:none;border:none;color:#16a34a;font-size:12px;font-weight:700;cursor:pointer;padding:0;line-height:1}
+.keyword-input{border:none;outline:none;font-size:12px;color:#0f172a;min-width:80px;flex:1;background:transparent;font-family:inherit}
+.keyword-input::placeholder{color:#cbd5e1}
+.rubric-divider{height:1px;background:#f1f5f9;margin:0 -20px}
 .published-banner{background:linear-gradient(135deg,#059669,#10b981);border-radius:16px;padding:28px;text-align:center;color:#fff;margin-bottom:20px}
 .published-banner .check{font-size:44px;margin-bottom:8px}
 .published-banner h2{font-size:20px;font-weight:800;margin-bottom:4px}
@@ -486,7 +500,8 @@ Return ONLY a valid JSON array (no markdown, no backticks, no extra text):
     "keyPoints":"<bullet list of key content points, each on new line starting with - >",
     "markingCriteria":"<how marks are split, e.g. 2 marks for definition, 2 marks for example, 1 mark for diagram>",
     "expectedKeywords":"<comma-separated key terms Gemini should look for in student answers>",
-    "commonMistakes":"<what students commonly get wrong for this type of question>"
+    "commonMistakes":"<what students commonly get wrong for this type of question>",
+    "modelAnswer":"<a concise ideal model answer for this question, 2-4 sentences>"
   }
 ]
 Be thorough. Extract every question including sub-parts (keep sub-parts as one item with combined marks if they share one question number).`});
@@ -513,22 +528,83 @@ function renderRubric(){
   const c=document.getElementById('rubric-list');c.innerHTML='';
   editedRubric.forEach((q,i)=>{
     if(typeof q.text!=='string')return;
-    const d=document.createElement('div');d.className='rubric-item';
-    d.innerHTML=`<div class="rubric-item-header">
+    // parse keywords into array
+    if(!Array.isArray(q._keywords)){
+      q._keywords=(q.expectedKeywords||'').split(',').map(k=>k.trim()).filter(Boolean);
+    }
+    const d=document.createElement('div');d.className='rubric-item';d.id='ri-'+i;
+    d.innerHTML=`
+    <div class="rubric-item-header">
       <span class="rubric-q-badge">Q${q.questionNumber||i+1}</span>
       <span class="rubric-q-text">${q.text}</span>
-      <span class="rubric-marks-badge">${q.marks} marks</span>
+      <div class="rubric-marks-wrap">
+        <span class="rubric-marks-label">marks</span>
+        <div class="rubric-marks-stepper">
+          <button onclick="stepMarks(${i},-1)">&#8722;</button>
+          <input type="number" min="0" max="100" value="${q.marks}" id="marks-input-${i}" oninput="rubricEdit(${i},'marks',parseInt(this.value)||0)"/>
+          <button onclick="stepMarks(${i},1)">+</button>
+        </div>
+      </div>
     </div>
+    ${q.modelAnswer?`<div class="rubric-model-answer-box"><strong>&#128203; Model Answer (from your paper):</strong> ${q.modelAnswer}</div>`:''}
     <div class="rubric-fields">
-      <div class="rubric-field"><label>Key Points (what students should write)</label><textarea rows="4" oninput="rubricEdit(${i},'keyPoints',this.value)">${q.keyPoints||''}</textarea></div>
-      <div class="rubric-field"><label>Marking Criteria (how marks are split)</label><textarea rows="3" oninput="rubricEdit(${i},'markingCriteria',this.value)">${q.markingCriteria||''}</textarea></div>
-      <div class="rubric-field"><label>Expected Keywords / Phrases</label><textarea rows="2" oninput="rubricEdit(${i},'expectedKeywords',this.value)">${q.expectedKeywords||''}</textarea></div>
-      <div class="rubric-field"><label>Common Mistakes to Watch For</label><textarea rows="2" oninput="rubricEdit(${i},'commonMistakes',this.value)">${q.commonMistakes||''}</textarea></div>
-      <div class="rubric-field"><label>Total Marks</label><input type="number" min="0" max="100" value="${q.marks}" oninput="rubricEdit(${i},'marks',parseInt(this.value)||0)"/></div>
+      <div class="rubric-field">
+        <div class="rubric-field-label">Keywords <span>&#8212; press Enter or comma to add</span></div>
+        <div class="keyword-wrap" id="kw-wrap-${i}" onclick="document.getElementById('kw-input-${i}').focus()">
+          ${q._keywords.map((kw,ki)=>`<span class="keyword-tag">${kw}<button onclick="removeKeyword(${i},${ki})">&#215;</button></span>`).join('')}
+          <input class="keyword-input" id="kw-input-${i}" placeholder="${q._keywords.length?'add keyword...':'Type keyword, press Enter'}" onkeydown="handleKwKey(event,${i})"/>
+        </div>
+      </div>
+      <div class="rubric-divider"></div>
+      <div class="rubric-field">
+        <div class="rubric-field-label">Marking Scheme <span>&#8212; editable</span></div>
+        <textarea rows="2" oninput="rubricEdit(${i},'markingCriteria',this.value)" placeholder="e.g. 1 mark: Definition | 2 marks: Process explanation | 1 mark: Diagram">${q.markingCriteria||''}</textarea>
+      </div>
+      <div class="rubric-divider"></div>
+      <div class="rubric-field">
+        <div class="rubric-field-label">Evaluation Criteria <span>&#8212; editable</span></div>
+        <textarea rows="3" oninput="rubricEdit(${i},'keyPoints',this.value)" placeholder="What the answer should include, what Gemini should look for...">${q.keyPoints||''}</textarea>
+      </div>
+      <div class="rubric-divider"></div>
+      <div class="rubric-field">
+        <div class="rubric-field-label">Model Answer <span>&#8212; editable</span></div>
+        <textarea rows="3" oninput="rubricEdit(${i},'modelAnswer',this.value)" placeholder="Expected ideal answer...">${q.modelAnswer||''}</textarea>
+      </div>
     </div>`;
     c.appendChild(d);
   });
   updateEditCount();
+}
+
+function stepMarks(i,delta){
+  const inp=document.getElementById('marks-input-'+i);
+  const newVal=Math.max(0,Math.min(100,(parseInt(inp.value)||0)+delta));
+  inp.value=newVal;
+  rubricEdit(i,'marks',newVal);
+}
+
+function handleKwKey(e,i){
+  if(e.key==='Enter'||e.key===','){
+    e.preventDefault();
+    const inp=e.target;
+    const val=inp.value.replace(/,/g,'').trim();
+    if(val&&!editedRubric[i]._keywords.includes(val)){
+      editedRubric[i]._keywords.push(val);
+      editedRubric[i].expectedKeywords=editedRubric[i]._keywords.join(', ');
+      rubricEdit(i,'expectedKeywords',editedRubric[i].expectedKeywords);
+    }
+    inp.value='';
+    renderRubric();
+    // refocus the input for that item
+    setTimeout(()=>{const el=document.getElementById('kw-input-'+i);if(el)el.focus();},0);
+  }
+}
+
+function removeKeyword(i,ki){
+  editedRubric[i]._keywords.splice(ki,1);
+  editedRubric[i].expectedKeywords=editedRubric[i]._keywords.join(', ');
+  rubricEdit(i,'expectedKeywords',editedRubric[i].expectedKeywords);
+  renderRubric();
 }
 function rubricEdit(i,f,v){
   editedRubric[i][f]=v;
@@ -709,6 +785,7 @@ MARKING RUBRIC:
 - Marking criteria: ${rb.markingCriteria||'N/A'}
 - Expected keywords/phrases: ${rb.expectedKeywords||'N/A'}
 - Common mistakes to watch: ${rb.commonMistakes||'N/A'}
+- Model answer reference: ${rb.modelAnswer||'N/A'}
 
 Carefully evaluate the student's answer below against this rubric.
 If handwritten pages are provided, read every page carefully before scoring.
